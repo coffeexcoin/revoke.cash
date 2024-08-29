@@ -23,7 +23,7 @@ export interface ChainOptions {
   deployedContracts?: DeployedContracts;
   priceStrategy?: PriceStrategy;
   backendPriceStrategy?: PriceStrategy;
-  isTestnet?: boolean;
+  isTestnet: boolean;
   isCanary?: boolean;
   correspondingMainnetChainId?: number;
 }
