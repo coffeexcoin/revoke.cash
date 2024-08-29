@@ -28,7 +28,7 @@ export interface ChainOptions {
   correspondingMainnetChainId?: number;
 }
 
-export type DeployedContracts = Record<string, { address: Address }>;
+export type DeployedContracts = Record<string, { address: Address }> | ViemChain['contracts'];
 
 export enum SupportType {
   PROVIDER = 'provider',
@@ -190,6 +190,7 @@ export class Chain {
         },
       },
       contracts: this.getDeployedContracts(),
+
       testnet: this.isTestnet(),
     });
   }
