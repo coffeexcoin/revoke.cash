@@ -477,7 +477,7 @@ export const CHAINS: Record<number, Chain> = {
     chainId: ChainId.BitrockMainnet,
     name: 'Bitrock',
     logoUrl: '/assets/images/vendor/chains/bitrock.svg',
-    etherscanCompatibleApiUrl: 'https://explorer.bit-rock.io/api',
+    etherscanCompatibleApiUrl: 'http://explorer.bit-rock.io/api',
     priceStrategy: undefined, // No liquid stablecoins
     isTestnet: false,
   }),
