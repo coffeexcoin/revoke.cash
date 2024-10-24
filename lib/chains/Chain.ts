@@ -23,7 +23,7 @@ export interface ChainOptions {
   deployedContracts?: DeployedContracts;
   priceStrategy?: PriceStrategy;
   backendPriceStrategy?: PriceStrategy;
-  isTestnet: boolean;
+  isTestnet?: boolean;
   isCanary?: boolean;
   correspondingMainnetChainId?: number;
 }
@@ -116,7 +116,7 @@ export class Chain {
   }
 
   getNativeToken(): string {
-    return this.options.nativeToken ?? getChain(this.chainId)?.nativeCurrency?.symbol ?? 'ETH';
+    return this.options.nativeToken ?? getChain(this.chainId)?.nativeCurrency?.symbol;
   }
 
   getEtherscanCompatibleApiUrl(): string | undefined {

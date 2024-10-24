@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useRouter } from 'lib/i18n/navigation';
 import { createViemPublicClientForChain, getViemChainConfig, ORDERED_CHAINS } from 'lib/utils/chains';
 import { SECOND } from 'lib/utils/time';
 import { ReactNode, useEffect } from 'react';
@@ -48,20 +49,40 @@ export const EthereumProvider = ({ children }: Props) => {
 };
 
 const EthereumProviderChild = ({ children }: Props) => {
-  const { connect, connectors } = useConnect();
+  const { connect, connectAsync, connectors } = useConnect();
   const { connector } = useAccount();
+  const router = useRouter();
+  const pathName = usePathname();
 
   // If the Safe connector is available, connect to it even if other connectors are available
   // (if another connector auto-connects (or user disconnects), we still override it with the Safe connector)
   useEffect(() => {
-    const safeConnector = connectors?.find((connector) => connector.id === 'safe');
-    if (!safeConnector || connector === safeConnector) return;
-
     // Only supported in an iFrame context
     if (typeof window === 'undefined' || window?.parent === window) return;
 
-    connect({ connector: safeConnector });
+    const safeConnector = connectors?.find((connector) => connector.id === 'safe');
+    if (!safeConnector || connector === safeConnector) return;
+
+    connectAsync({ connector: safeConnector }).then(({ accounts: [account] }) => {
+      if (pathName === '/') {
+        router.push(`/address/${account}${location.search}`);
+      }
+    });
   }, [connectors, connector]);
 
+  // If the Ledger Live connector is available, connect to it even if other connectors are available
+  // (if another connector auto-connects (or user disconnects), we still override it with the Ledger Live connector)
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window?.ethereum?.isLedgerLive) return;
+
+    const injectedConnector = connectors?.find((connector) => connector.id === 'injected');
+    if (!injectedConnector || connector === injectedConnector) return;
+
+    connectAsync({ connector: injectedConnector }).then(({ accounts: [account] }) => {
+      if (pathName === '/') {
+        router.push(`/address/${account}${location.search}`);
+      }
+    });
+  }, [connectors, connector]);
   return <>{children}</>;
 };
