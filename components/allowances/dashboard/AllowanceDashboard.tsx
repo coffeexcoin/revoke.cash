@@ -3,7 +3,11 @@
 import { getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { ColumnId, columns } from 'components/allowances/dashboard/columns';
 import Table from 'components/common/table/Table';
-import { useAddressAllowances, useAddressPageContext } from 'lib/hooks/page-context/AddressPageContext';
+import {
+  useAddressAllowances,
+  useAddressEvents,
+  useAddressPageContext,
+} from 'lib/hooks/page-context/AddressPageContext';
 import type { AllowanceData } from 'lib/interfaces';
 import { useEffect, useMemo, useState } from 'react';
 import NoAllowancesFound from './NoAllowancesFound';
@@ -12,6 +16,7 @@ import AllowanceTableControls from './controls/AllowanceTableControls';
 const AllowanceDashboard = () => {
   const { selectedChainId } = useAddressPageContext();
   const { allowances, isLoading, error, onUpdate } = useAddressAllowances();
+  const { events } = useAddressEvents();
 
   const [rowSelection, setRowSelection] = useState({});
 
@@ -53,6 +58,10 @@ const AllowanceDashboard = () => {
 
   return (
     <div className="flex flex-col justify-start mx-auto gap-2">
+      <div className="border p-4">
+        <pre>{JSON.stringify({ approval: events?.approval[0] }, null, 2)}</pre>
+      </div>
+
       <AllowanceTableControls table={table} />
       <Table
         table={table}
